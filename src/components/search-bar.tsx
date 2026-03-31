@@ -97,16 +97,35 @@ export function SearchBar({ onSearch, onNodeSelect }: SearchBarProps) {
     setShowResults(false);
   };
 
+  const handleSubmit = () => {
+    if (!query.trim()) return;
+    // If there are results, select the first one; otherwise trigger remote search
+    if (results.length > 0) {
+      handleSelect(results[0]);
+    } else {
+      fetchRemoteResults(query);
+    }
+  };
+
   return (
     <div className="relative">
-      <Input
-        placeholder="搜索研究领域、论文、学者..."
-        value={query}
-        onChange={(e) => handleChange(e.target.value)}
-        onFocus={() => query.length > 0 && setShowResults(true)}
-        onBlur={() => setTimeout(() => setShowResults(false), 200)}
-        className="bg-card/80 backdrop-blur-sm border-border/50 h-10 w-72 text-sm"
-      />
+      <div className="flex gap-1.5">
+        <Input
+          placeholder="搜索研究领域、论文、学者..."
+          value={query}
+          onChange={(e) => handleChange(e.target.value)}
+          onFocus={() => query.length > 0 && setShowResults(true)}
+          onBlur={() => setTimeout(() => setShowResults(false), 200)}
+          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+          className="bg-card/80 backdrop-blur-sm border-border/50 h-10 w-64 text-sm"
+        />
+        <button
+          onClick={handleSubmit}
+          className="h-10 px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors shrink-0"
+        >
+          搜索
+        </button>
+      </div>
       {showResults && results.length > 0 && (
         <div className="absolute top-full mt-1 w-96 bg-card border border-border rounded-lg shadow-xl z-50 overflow-hidden">
           {results.some((r) => r.type === "local") && (

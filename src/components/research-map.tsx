@@ -42,7 +42,7 @@ export function ResearchMap({
     svg.selectAll("*").remove();
 
     const { width, height } = dimensions;
-    const padding = 40;
+    const padding = 80; // extra space for axis labels
 
     // Create zoom behavior
     const zoom = d3
@@ -56,44 +56,160 @@ export function ResearchMap({
 
     const mainGroup = svg.append("g");
 
-    // Draw background grid
+    const axisColor = "rgba(180, 160, 120, 0.6)";
+    const axisLabelColor = "rgba(180, 160, 120, 0.85)";
+    const axisBg = "rgba(40, 35, 25, 0.7)";
+    const mapLeft = padding;
+    const mapRight = width - padding;
+    const mapTop = padding;
+    const mapBottom = height - padding;
+    const mapW = mapRight - mapLeft;
+    const mapH = mapBottom - mapTop;
+
+    // Draw background grid (subtle)
     const gridGroup = mainGroup.append("g").attr("class", "grid");
-    for (let i = 0; i <= 10; i++) {
-      const x = padding + (i / 10) * (width - 2 * padding);
-      const y = padding + (i / 10) * (height - 2 * padding);
+    for (let i = 0; i <= 20; i++) {
+      const x = mapLeft + (i / 20) * mapW;
+      const y = mapTop + (i / 20) * mapH;
       gridGroup
         .append("line")
-        .attr("x1", x).attr("y1", padding)
-        .attr("x2", x).attr("y2", height - padding)
-        .attr("stroke", "rgba(255,255,255,0.03)")
+        .attr("x1", x).attr("y1", mapTop)
+        .attr("x2", x).attr("y2", mapBottom)
+        .attr("stroke", "rgba(255,255,255,0.02)")
         .attr("stroke-width", 1);
       gridGroup
         .append("line")
-        .attr("x1", padding).attr("y1", y)
-        .attr("x2", width - padding).attr("y2", y)
-        .attr("stroke", "rgba(255,255,255,0.03)")
+        .attr("x1", mapLeft).attr("y1", y)
+        .attr("x2", mapRight).attr("y2", y)
+        .attr("stroke", "rgba(255,255,255,0.02)")
         .attr("stroke-width", 1);
     }
 
-    // Axis labels
-    mainGroup
-      .append("text")
-      .attr("x", width / 2)
-      .attr("y", height - 8)
-      .attr("text-anchor", "middle")
-      .attr("fill", "rgba(255,255,255,0.3)")
-      .attr("font-size", "11px")
-      .text("研究对象尺度 →  亚原子  ·  分子  ·  细胞  ·  个体  ·  地球  ·  宇宙");
+    // ===== X AXIS (bottom) — Research Object Scale =====
+    const xAxisY = mapBottom + 8;
+    const xAxisGroup = mainGroup.append("g").attr("class", "x-axis");
 
-    mainGroup
-      .append("text")
-      .attr("transform", `rotate(-90)`)
-      .attr("x", -(height / 2))
-      .attr("y", 14)
-      .attr("text-anchor", "middle")
-      .attr("fill", "rgba(255,255,255,0.3)")
-      .attr("font-size", "11px")
-      .text("← 基础研究  ·  应用研究  ·  商业化 →");
+    // Axis bar background
+    xAxisGroup
+      .append("rect")
+      .attr("x", mapLeft - 5)
+      .attr("y", xAxisY)
+      .attr("width", mapW + 10)
+      .attr("height", 36)
+      .attr("rx", 3)
+      .attr("fill", axisBg);
+
+    // Axis line
+    xAxisGroup
+      .append("line")
+      .attr("x1", mapLeft).attr("y1", xAxisY + 4)
+      .attr("x2", mapRight).attr("y2", xAxisY + 4)
+      .attr("stroke", axisColor)
+      .attr("stroke-width", 1.5);
+
+    // Tick marks
+    for (let i = 0; i <= 40; i++) {
+      const tx = mapLeft + (i / 40) * mapW;
+      const tickH = i % 8 === 0 ? 8 : 3;
+      xAxisGroup
+        .append("line")
+        .attr("x1", tx).attr("y1", xAxisY + 4)
+        .attr("x2", tx).attr("y2", xAxisY + 4 + tickH)
+        .attr("stroke", axisColor)
+        .attr("stroke-width", i % 8 === 0 ? 1.2 : 0.6);
+    }
+
+    // Scale labels with arrows
+    const xLabels = [
+      { text: "跨尺度", pos: 0.1 },
+      { text: "纳米", pos: 0.3 },
+      { text: "微观", pos: 0.5 },
+      { text: "宏观", pos: 0.7 },
+      { text: "宇宙", pos: 0.9 },
+    ];
+    xLabels.forEach((label) => {
+      const lx = mapLeft + label.pos * mapW;
+      // Arrow
+      xAxisGroup
+        .append("text")
+        .attr("x", lx)
+        .attr("y", xAxisY + 18)
+        .attr("text-anchor", "middle")
+        .attr("fill", axisLabelColor)
+        .attr("font-size", "10px")
+        .text("↓");
+      // Label
+      xAxisGroup
+        .append("text")
+        .attr("x", lx)
+        .attr("y", xAxisY + 32)
+        .attr("text-anchor", "middle")
+        .attr("fill", axisLabelColor)
+        .attr("font-size", "11px")
+        .attr("font-weight", "500")
+        .text(label.text);
+    });
+
+    // ===== Y AXIS (left) — Knowledge Maturity =====
+    const yAxisX = mapLeft - 8;
+    const yAxisGroup = mainGroup.append("g").attr("class", "y-axis");
+
+    // Axis bar background
+    yAxisGroup
+      .append("rect")
+      .attr("x", yAxisX - 58)
+      .attr("y", mapTop - 5)
+      .attr("width", 56)
+      .attr("height", mapH + 10)
+      .attr("rx", 3)
+      .attr("fill", axisBg);
+
+    // Axis line
+    yAxisGroup
+      .append("line")
+      .attr("x1", yAxisX).attr("y1", mapTop)
+      .attr("x2", yAxisX).attr("y2", mapBottom)
+      .attr("stroke", axisColor)
+      .attr("stroke-width", 1.5);
+
+    // Tick marks
+    for (let i = 0; i <= 30; i++) {
+      const ty = mapTop + (i / 30) * mapH;
+      const tickW = i % 10 === 0 ? 8 : 3;
+      yAxisGroup
+        .append("line")
+        .attr("x1", yAxisX).attr("y1", ty)
+        .attr("x2", yAxisX - tickW).attr("y2", ty)
+        .attr("stroke", axisColor)
+        .attr("stroke-width", i % 10 === 0 ? 1.2 : 0.6);
+    }
+
+    // Maturity labels (top = commercial, bottom = basic)
+    const yLabels = [
+      { text: "商业化", pos: 0.15 },
+      { text: "应用", pos: 0.5 },
+      { text: "基础", pos: 0.85 },
+    ];
+    yLabels.forEach((label) => {
+      const ly = mapTop + label.pos * mapH;
+      // Horizontal dash
+      yAxisGroup
+        .append("line")
+        .attr("x1", yAxisX - 10).attr("y1", ly)
+        .attr("x2", yAxisX).attr("y2", ly)
+        .attr("stroke", axisLabelColor)
+        .attr("stroke-width", 1);
+      // Label
+      yAxisGroup
+        .append("text")
+        .attr("x", yAxisX - 14)
+        .attr("y", ly + 4)
+        .attr("text-anchor", "end")
+        .attr("fill", axisLabelColor)
+        .attr("font-size", "12px")
+        .attr("font-weight", "600")
+        .text(label.text);
+    });
 
     // Draw continent regions
     continents.forEach((continent) => {

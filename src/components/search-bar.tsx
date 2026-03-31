@@ -146,23 +146,23 @@ export function SearchBar({ onSearch, onNodeSelect }: SearchBarProps) {
     <div className="relative" ref={containerRef} onBlur={handleBlur}>
       <div className="flex gap-1.5">
         <Input
-          placeholder="搜索研究领域、论文、学者..."
+          placeholder="搜索论文、学者..."
           value={query}
           onChange={(e) => handleChange(e.target.value)}
           onFocus={() => query.length > 0 && setShowResults(true)}
           onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-          className="bg-card/80 backdrop-blur-sm border-border/50 h-10 w-64 text-sm"
+          className="bg-card/80 backdrop-blur-sm border-border/50 h-9 sm:h-10 flex-1 min-w-0 text-sm"
         />
         <button
           onClick={handleSubmit}
-          className="h-10 px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors shrink-0"
+          className="h-9 sm:h-10 px-2.5 sm:px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors shrink-0"
         >
           搜索
         </button>
       </div>
 
       {showResults && (
-        <div className="absolute top-full mt-1 w-96 bg-card border border-border rounded-lg shadow-xl z-50 overflow-hidden">
+        <div className="absolute top-full mt-1 w-[calc(100vw-1rem)] sm:w-96 left-0 sm:left-auto bg-card border border-border rounded-lg shadow-xl z-50 overflow-hidden max-h-[60vh] overflow-y-auto">
           {results.filter((r) => r.type === "local").length > 0 && (
             <>
               <div className="px-3 py-1.5 text-[10px] text-muted-foreground border-b border-border/50 font-medium">

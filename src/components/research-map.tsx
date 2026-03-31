@@ -42,7 +42,8 @@ export function ResearchMap({
     svg.selectAll("*").remove();
 
     const { width, height } = dimensions;
-    const padding = 80; // extra space for axis labels
+    const isMobile = width < 640;
+    const padding = isMobile ? 50 : 80; // less padding on mobile
 
     // Create zoom behavior
     const zoom = d3
@@ -146,7 +147,7 @@ export function ResearchMap({
         .attr("y", xAxisY + 32)
         .attr("text-anchor", "middle")
         .attr("fill", axisLabelColor)
-        .attr("font-size", "11px")
+        .attr("font-size", isMobile ? "8px" : "11px")
         .attr("font-weight", "500")
         .text(label.text);
     });
@@ -156,11 +157,12 @@ export function ResearchMap({
     const yAxisGroup = mainGroup.append("g").attr("class", "y-axis");
 
     // Axis bar background
+    const yBarW = isMobile ? 36 : 56;
     yAxisGroup
       .append("rect")
-      .attr("x", yAxisX - 58)
+      .attr("x", yAxisX - yBarW - 2)
       .attr("y", mapTop - 5)
-      .attr("width", 56)
+      .attr("width", yBarW)
       .attr("height", mapH + 10)
       .attr("rx", 3)
       .attr("fill", axisBg);
@@ -207,7 +209,7 @@ export function ResearchMap({
         .attr("y", ly + 4)
         .attr("text-anchor", "end")
         .attr("fill", axisLabelColor)
-        .attr("font-size", "12px")
+        .attr("font-size", isMobile ? "9px" : "12px")
         .attr("font-weight", "600")
         .text(label.text);
     });

@@ -50,7 +50,7 @@ export function AIAssistant({ initialContext }: AIAssistantProps) {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-96 h-[520px] rounded-xl border border-border/50 bg-card/95 backdrop-blur-md shadow-2xl flex flex-col overflow-hidden">
+    <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-96 h-[70vh] sm:h-[520px] sm:rounded-xl rounded-t-xl border border-border/50 bg-card/95 backdrop-blur-md shadow-2xl flex flex-col overflow-hidden">
       {/* Header */}
       <div className="shrink-0 px-4 py-3 border-b border-border/50 flex items-center justify-between">
         <div className="flex items-center gap-2">

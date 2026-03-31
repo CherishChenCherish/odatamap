@@ -21,8 +21,8 @@ export function NodeDetailPanel({
   if (!node && !continent) return null;
 
   return (
-    <div className="absolute right-0 top-0 h-full w-80 z-40 p-4 pointer-events-none">
-      <Card className="pointer-events-auto h-full bg-card/95 backdrop-blur-md border-border/50 shadow-2xl overflow-auto">
+    <div className="absolute inset-x-0 bottom-0 sm:inset-x-auto sm:right-0 sm:top-0 sm:bottom-auto sm:h-full w-full sm:w-80 z-40 p-2 sm:p-4 pointer-events-none">
+      <Card className="pointer-events-auto max-h-[50vh] sm:max-h-none sm:h-full bg-card/95 backdrop-blur-md border-border/50 shadow-2xl overflow-auto">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div>

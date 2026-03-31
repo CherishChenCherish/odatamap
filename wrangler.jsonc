@@ -1,6 +1,10 @@
 {
   "name": "odatamap",
+  "main": ".open-next/worker.js",
   "compatibility_flags": ["nodejs_compat"],
   "compatibility_date": "2025-03-30",
-  "pages_build_output_dir": ".open-next/cloudflare"
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  }
 }

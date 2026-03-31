@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import type { ResearchNode, Continent } from "@/lib/map-data";
 
 interface NodeDetailPanelProps {
@@ -125,6 +126,23 @@ export function NodeDetailPanel({
                       : `「${node.name}」处于活跃发展阶段，既有一定研究基础，又不过度拥挤。是进入该领域的较好时机。`}
                 </p>
               </div>
+
+              {/* Direction link - map node names to direction IDs */}
+              {(() => {
+                const directionMap: Record<string, string> = {
+                  "量子计算": "quantum-computing",
+                  "基因编辑": "gene-editing",
+                  "大语言模型": "llm",
+                };
+                const dirId = directionMap[node.name];
+                return dirId ? (
+                  <Link href={`/direction/${dirId}`}>
+                    <Button variant="outline" size="sm" className="w-full text-xs">
+                      查看详细分析 →
+                    </Button>
+                  </Link>
+                ) : null;
+              })()}
 
               <Badge
                 variant="outline"

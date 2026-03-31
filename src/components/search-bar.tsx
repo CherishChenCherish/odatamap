@@ -32,26 +32,32 @@ export function SearchBar({ onSearch, onNodeSelect }: SearchBarProps) {
     setLoading(true);
     setShowResults(true);
     try {
+      // Call OpenAlex directly from client (CORS supported) to avoid Workers IP rate limits
+      const params = new URLSearchParams({
+        search: q,
+        per_page: "5",
+        mailto: "cherishchen2510@gmail.com",
+      });
       const res = await fetch(
-        `/api/search?q=${encodeURIComponent(q)}&type=papers`
+        `https://api.openalex.org/works?${params}`
       );
       if (!res.ok) return;
       const data = await res.json();
-      const paperResults: SearchResult[] = data.papers
+      const paperResults: SearchResult[] = data.results
         .slice(0, 5)
         .map(
           (p: {
             id: string;
             title: string;
-            journal: string;
-            year: number;
-            citations: number;
+            publication_year: number;
+            cited_by_count: number;
+            primary_location: { source: { display_name: string } | null } | null;
           }) => ({
             type: "paper" as const,
-            id: p.id,
-            title: p.title,
-            subtitle: p.journal,
-            meta: `${p.year} · ${p.citations} 引用`,
+            id: p.id.split("/").pop() || p.id,
+            title: p.title || "无标题",
+            subtitle: p.primary_location?.source?.display_name || "未知期刊",
+            meta: `${p.publication_year} · ${p.cited_by_count} 引用`,
           })
         );
 

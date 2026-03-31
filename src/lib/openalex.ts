@@ -3,7 +3,19 @@
 // Covers 250M+ papers, 90M+ authors, 100K+ institutions
 
 const BASE_URL = "https://api.openalex.org";
-const MAILTO = "info@odatamap.com"; // polite pool for better rate limits
+const MAILTO = "cherishchen2510@gmail.com"; // polite pool - must be real email
+
+// Unified fetch with proper headers for OpenAlex polite pool
+async function oaFetch(url: string): Promise<Response> {
+  const separator = url.includes("?") ? "&" : "?";
+  const fullUrl = `${url}${separator}mailto=${encodeURIComponent(MAILTO)}`;
+  return fetch(fullUrl, {
+    headers: {
+      "User-Agent": `ODataMap/1.0 (mailto:${MAILTO})`,
+      Accept: "application/json",
+    },
+  });
+}
 
 interface OpenAlexWork {
   id: string;
@@ -89,10 +101,9 @@ export async function searchPapers(
     search: query,
     page: String(page),
     per_page: String(perPage),
-    mailto: MAILTO,
   });
 
-  const res = await fetch(`${BASE_URL}/works?${params}`);
+  const res = await oaFetch(`${BASE_URL}/works?${params}`);
   if (!res.ok) throw new Error(`OpenAlex API error: ${res.status}`);
 
   const data: OpenAlexResults<OpenAlexWork> = await res.json();
@@ -122,7 +133,7 @@ export async function searchPapers(
 
 // Get a single paper by OpenAlex ID
 export async function getPaperById(id: string) {
-  const res = await fetch(`${BASE_URL}/works/${id}?mailto=${MAILTO}`);
+  const res = await oaFetch(`${BASE_URL}/works/${id}`);
   if (!res.ok) return null;
 
   const w: OpenAlexWork = await res.json();
@@ -169,10 +180,9 @@ export async function searchAuthors(
     search: query,
     page: String(page),
     per_page: String(perPage),
-    mailto: MAILTO,
   });
 
-  const res = await fetch(`${BASE_URL}/authors?${params}`);
+  const res = await oaFetch(`${BASE_URL}/authors?${params}`);
   if (!res.ok) throw new Error(`OpenAlex API error: ${res.status}`);
 
   const data: OpenAlexResults<OpenAlexAuthor> = await res.json();
@@ -195,14 +205,14 @@ export async function searchAuthors(
 
 // Get a single author by OpenAlex ID
 export async function getAuthorById(id: string) {
-  const res = await fetch(`${BASE_URL}/authors/${id}?mailto=${MAILTO}`);
+  const res = await oaFetch(`${BASE_URL}/authors/${id}`);
   if (!res.ok) return null;
 
   const a: OpenAlexAuthor = await res.json();
 
   // Fetch recent papers
-  const worksRes = await fetch(
-    `${a.works_api_url}&sort=publication_year:desc&per_page=5&mailto=${MAILTO}`
+  const worksRes = await oaFetch(
+    `${a.works_api_url}&sort=publication_year:desc&per_page=5`
   );
   const worksData: OpenAlexResults<OpenAlexWork> = worksRes.ok
     ? await worksRes.json()
@@ -236,10 +246,9 @@ export async function getFieldStats(fieldName: string) {
   const params = new URLSearchParams({
     search: fieldName,
     per_page: "1",
-    mailto: MAILTO,
   });
 
-  const res = await fetch(`${BASE_URL}/topics?${params}`);
+  const res = await oaFetch(`${BASE_URL}/topics?${params}`);
   if (!res.ok) return null;
 
   const data = await res.json();

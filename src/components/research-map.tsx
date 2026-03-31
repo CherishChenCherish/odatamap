@@ -121,11 +121,12 @@ export function ResearchMap({
 
     // Scale labels with arrows
     const xLabels = [
-      { text: "跨尺度", pos: 0.1 },
-      { text: "纳米", pos: 0.3 },
-      { text: "微观", pos: 0.5 },
-      { text: "宏观", pos: 0.7 },
-      { text: "宇宙", pos: 0.9 },
+      { text: "亚原子", pos: 0.1 },
+      { text: "分子/细胞", pos: 0.29 },
+      { text: "信息/抽象", pos: 0.47 },
+      { text: "工程尺度", pos: 0.65 },
+      { text: "地球", pos: 0.81 },
+      { text: "宇宙", pos: 0.94 },
     ];
     xLabels.forEach((label) => {
       const lx = mapLeft + label.pos * mapW;
@@ -184,11 +185,11 @@ export function ResearchMap({
         .attr("stroke-width", i % 10 === 0 ? 1.2 : 0.6);
     }
 
-    // Maturity labels (top = commercial, bottom = basic)
+    // Maturity labels: top of SVG = small y = basic research, bottom = commercial
     const yLabels = [
-      { text: "商业化", pos: 0.15 },
+      { text: "基础", pos: 0.15 },
       { text: "应用", pos: 0.5 },
-      { text: "基础", pos: 0.85 },
+      { text: "商业化", pos: 0.85 },
     ];
     yLabels.forEach((label) => {
       const ly = mapTop + label.pos * mapH;

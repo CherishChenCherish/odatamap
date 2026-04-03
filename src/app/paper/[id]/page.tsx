@@ -59,6 +59,26 @@ export default async function PaperPage({
       <main className="max-w-4xl mx-auto px-4 py-8 space-y-6">
         <div>
           <h1 className="text-2xl font-bold leading-tight">{paper.title}</h1>
+          <div className="flex gap-2 mt-3">
+            {paper.doi && (
+              <a
+                href={paper.doi.startsWith("http") ? paper.doi : `https://doi.org/${paper.doi}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+              >
+                阅读原文 ↗
+              </a>
+            )}
+            <a
+              href={`https://openalex.org/works/${id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border text-sm hover:bg-accent transition-colors"
+            >
+              OpenAlex ↗
+            </a>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-2">

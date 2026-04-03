@@ -12,6 +12,7 @@ interface SearchResult {
   subtitle: string;
   color?: string;
   meta?: string;
+  doi?: string | null;
 }
 
 interface SearchBarProps {
@@ -48,6 +49,7 @@ export function SearchBar({ onSearch, onNodeSelect }: SearchBarProps) {
         .map(
           (p: {
             id: string;
+            doi: string | null;
             title: string;
             publication_year: number;
             cited_by_count: number;
@@ -58,6 +60,7 @@ export function SearchBar({ onSearch, onNodeSelect }: SearchBarProps) {
             title: p.title || "无标题",
             subtitle: p.primary_location?.source?.display_name || "未知期刊",
             meta: `${p.publication_year} · ${p.cited_by_count} 引用`,
+            doi: p.doi,
           })
         );
 
@@ -206,11 +209,10 @@ export function SearchBar({ onSearch, onNodeSelect }: SearchBarProps) {
               {results
                 .filter((r) => r.type === "paper")
                 .map((result) => (
-                  <button
+                  <div
                     key={result.id}
-                    className="w-full px-3 py-2 text-left hover:bg-accent/50 flex items-start gap-2 transition-colors"
+                    className="w-full px-3 py-2 hover:bg-accent/50 flex items-start gap-2 transition-colors"
                     onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => handleSelect(result)}
                   >
                     <Badge
                       variant="outline"
@@ -218,13 +220,24 @@ export function SearchBar({ onSearch, onNodeSelect }: SearchBarProps) {
                     >
                       论文
                     </Badge>
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1 cursor-pointer" onClick={() => handleSelect(result)}>
                       <p className="text-sm truncate">{result.title}</p>
                       <p className="text-[10px] text-muted-foreground">
                         {result.subtitle} · {result.meta}
                       </p>
                     </div>
-                  </button>
+                    {result.doi && (
+                      <a
+                        href={result.doi}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="shrink-0 text-[10px] px-1.5 py-0.5 rounded border border-border hover:bg-primary hover:text-primary-foreground transition-colors"
+                        onMouseDown={(e) => e.stopPropagation()}
+                      >
+                        原文↗
+                      </a>
+                    )}
+                  </div>
                 ))}
             </>
           )}

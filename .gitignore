@@ -43,3 +43,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .open-next
+awesome-dataviz
+awesome-nextjs
+awesome-research

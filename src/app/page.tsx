@@ -7,6 +7,7 @@ import { NodeDetailPanel } from "@/components/node-detail-panel";
 import { ContinentLegend } from "@/components/continent-legend";
 import { DataStream } from "@/components/data-stream";
 import { AIAssistant } from "@/components/ai-assistant";
+import Link from "next/link";
 import type { ResearchNode, Continent } from "@/lib/map-data";
 
 export default function Home() {
@@ -58,8 +59,14 @@ export default function Home() {
             <SearchBar onSearch={handleSearch} onNodeSelect={handleNodeClick} />
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-muted-foreground shrink-0">
-            <span className="hidden md:inline">滚轮缩放 · 拖拽平移</span>
+          <div className="flex items-center gap-2 shrink-0">
+            <Link
+              href="/idea-check"
+              className="px-2.5 py-1.5 rounded-md bg-gradient-to-r from-blue-500/10 to-violet-500/10 border border-blue-500/20 text-xs font-medium hover:from-blue-500/20 hover:to-violet-500/20 transition-colors"
+            >
+              Idea Check
+            </Link>
+            <span className="hidden md:inline text-xs text-muted-foreground">滚轮缩放 · 拖拽平移</span>
           </div>
         </div>
       </header>

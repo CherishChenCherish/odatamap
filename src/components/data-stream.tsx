@@ -88,9 +88,12 @@ export function DataStream() {
       <ScrollArea className="flex-1">
         <div className="p-2 space-y-1">
           {entries.map((entry) => (
-            <div
+            <a
               key={entry.id}
-              className="px-2.5 py-2 rounded-md hover:bg-accent/30 transition-colors cursor-pointer group"
+              href={`https://scholar.google.com/scholar?q=${encodeURIComponent(entry.title)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block px-2.5 py-2 rounded-md hover:bg-accent/30 transition-colors cursor-pointer group"
             >
               <div className="flex items-center gap-1.5 mb-1">
                 <Badge
@@ -109,11 +112,12 @@ export function DataStream() {
               </div>
               <p className="text-xs leading-relaxed line-clamp-2 group-hover:text-foreground text-muted-foreground">
                 {entry.title}
+                <span className="text-[10px] text-muted-foreground/50 ml-1">↗</span>
               </p>
               <p className="text-[10px] text-muted-foreground/70 mt-0.5">
                 {entry.field}
               </p>
-            </div>
+            </a>
           ))}
         </div>
       </ScrollArea>
